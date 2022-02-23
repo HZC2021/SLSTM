@@ -1,6 +1,3 @@
-
-
-
 from trainwithstd import create_model
 import numpy as np
 from pickle import load
@@ -14,8 +11,8 @@ if __name__ == "__main__":
     drop_out = 0.3
 
     print(L1_array, units, drop_out)
-    a = np.load(r"std_aci_aru03\val_epoch_cmba_aci_aru03_L%s_u%d_dp%.2f_t0.npy" % (L1_array, units, drop_out), allow_pickle=True)
-    idx = np.argmin(a[:,1])
+    val_loss = np.load(r"std_aci_aru03\val_epoch_cmba_aci_aru03_L%s_u%d_dp%.2f_t0.npy" % (L1_array, units, drop_out), allow_pickle=True)
+    idx = np.argmin(val_loss[:,1])
     test_X = np.load('test_X.npy')
     test_y = np.load('test_y.npy')
     val_X = np.load('val_X.npy')
@@ -28,7 +25,7 @@ if __name__ == "__main__":
     batch_size = 1
 
     model = create_model(SLSTM = True, units = units, drop_out=0., batch_input_shape=(shape[0], shape[1], shape[2]))
-    model.load_weights(r'./std_record_aci_aru03/train_cmba_aci_aru03_SLSTM_L%s_u%d_dp%.2f_std_t0\01_' % (L1_array, units, drop_out)+'%.6f.ckpt'%a[idx,2][0])
+    model.load_weights(r'./std_record_aci_aru03/train_cmba_aci_aru03_SLSTM_L%s_u%d_dp%.2f_std_t0\01_' % (L1_array, units, drop_out)+'%.6f.ckpt'%val_loss[idx,2][0])
 
     train_len = len(train_y)
     test_len = len(test_y)

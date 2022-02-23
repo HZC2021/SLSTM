@@ -1,13 +1,8 @@
-
-
-
-from trainwithstd import create_model
+from LSTMstd import create_model
 import numpy as np
 from pickle import load
 import math
 from sklearn.metrics import mean_squared_error, r2_score
-
-
 
 
 if __name__ == "__main__":
@@ -23,10 +18,10 @@ if __name__ == "__main__":
     std = np.load("os_std.npy")
     shape = test_X.shape
     batch_size = 1
-    a = np.load("std/val_epoch_cmba_bio_aru03_L%s_lstm.npy"%L1_array, allow_pickle=True)
-    idx = np.argmin(a[:, 1])
-    model = create_model(SLSTM = False, units = 15, drop_out=0., batch_input_shape=(shape[0], shape[1], shape[2]))
-    model.load_weights(r'./lstmrecord/train_cmba_bio_aru03_SLSTM_L%s_u15_std_lstm/01_'%L1_array+'%.6f.ckpt'%a[idx,2][0])
+    val_loss = np.load("std/val_epoch_cmba_bio_aru03_L%s_lstm.npy"%L1_array, allow_pickle=True)
+    idx = np.argmin(val_loss[:, 1])
+    model = create_model(SLSTM = False, units = 15, drop_out=0.)
+    model.load_weights(r'./lstmrecord/train_cmba_bio_aru03_SLSTM_L%s_u15_std_lstm/01_'%L1_array+'%.6f.ckpt'%val_loss[idx,2][0])
     train_len = len(train_y)
     test_len = len(test_y)
     val_len = len(val_y)

@@ -34,13 +34,8 @@ def series_to_supervised(data, n_in=1, n_out=1, dropnan=True):
 def scheduler(epoch, lr):
     if epoch < 50:
         return lr
-    elif epoch < 600:
-        return lr * 1 / (1 + 5e-5 * epoch)
-    elif epoch == 600:
-        return 1e-3
     else:
         return lr * 1 / (1 + 5e-5 * epoch)
-
 
 def create_model(SLSTM=True, units=50, drop_out=0., l1=1e-3, batch_input_shape=None):
     model = Sequential()
@@ -66,11 +61,8 @@ def create_model(SLSTM=True, units=50, drop_out=0., l1=1e-3, batch_input_shape=N
 
 def trainwithval(trainset, valset, units=50, drop_out=0., batch_size=32, epochs=50, L1_value=0., L1_name="0"):
     # design network
-
     model = create_model(SLSTM=True, units=units, drop_out=drop_out, l1=L1_value, )
-    # batch_input_shape = [batch_size, trainset[0].shape[1], trainset[0].shape[2]])
     # define callback func
-
     file_name = "{epoch:02d}_{loss:.6f}.ckpt"
     checkpoint_path = os.path.join('./std_record_aci_aru03/train_cmba_%s_aru%02d_SLSTM_L%s_u%d_dp%.2f_std_t0' % (name, aru, L1_name, units, drop_out), file_name)
     callback_lr = tf.keras.callbacks.LearningRateScheduler(scheduler)
@@ -107,20 +99,15 @@ def trainwithval(trainset, valset, units=50, drop_out=0., batch_size=32, epochs=
 
 
 if __name__ == "__main__":
-
-
     # load dataset
     name = "aci"
     aru = 3
     data = np.load(r"cbma\%s_aru%02d.npy" % (name, aru), allow_pickle=True)
     values = data[:, 1]
-    L1_v = [1e-5, 1e-6, 1e-7, 1e-4, 1e-8]
-    L1_array = ["1e-5", "1e-6", "1e-7", "1e-4", "1e-8"]
-    # L1_v = [1e-5]
-    # L1_array = ["1e-5"]
+    L1_v = 1e-6
+    L1_array = "1e-6"
 
     scaled = values[:, np.newaxis].astype('float32')
-
     n_hours = 8
     n_features = 1
     # frame as supervised learning
@@ -129,7 +116,6 @@ if __name__ == "__main__":
     train_num = round(num * 0.6)
     val_num = round(num * 0.2)
     test_num = num - train_num - val_num
-    # n_train_hours = round(365 * 24 * 2)
     train_X = X[:train_num, :, :]
     train_y = y[:train_num, :]
     train_val_X = X[:train_num + val_num, :, :]
@@ -181,7 +167,6 @@ if __name__ == "__main__":
     units = 12
     drop = 0.3
     batch_size = 1
-    for j in range(len(L1_v)):
-        model = trainwithval([train_X, train_y], [val_X, val_y], units=units[i],
-                             drop_out=drop, batch_size=1, epochs=150, L1_value=L1_v[j], L1_name=L1_array[j])
+    model = trainwithval([train_X, train_y], [val_X, val_y], units=units[i],
+                         drop_out=drop, batch_size=1, epochs=150, L1_value=L1_v, L1_name=L1_array)
     print(datetime.datetime.now())
