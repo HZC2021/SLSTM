@@ -1,14 +1,15 @@
 # A Seasonal Long Short Term Memory Deep Learning Network for Estimating Time Series of Animal Activity Signals
 ### Requirements
-Python 3.8
-Tensorflow 2.6.0
-Keras 2.6.0
+- Python 3.8
+- Tensorflow 2.6.0
+- Keras 2.6.0
 
 ### 1. The datasets we used
 https://drive.google.com/drive/folders/1DivTa2FE6vGE9oiEHlzuPRuj9xNCSRuN?usp=sharing
 
 ### 2. Test the S-LSTM
 Run trainwithstd.py for training models
+
 Run predictwithstd.py for testing
 
 ### Sidenote: Using the GPU
