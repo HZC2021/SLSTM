@@ -72,8 +72,7 @@ def trainwithval(trainset, valset, units=50, drop_out=0., batch_size=32, epochs=
         val_len = len(val_y)
         run_X = np.concatenate((train_X, val_X), axis=0)
         run_y = np.concatenate((train_y, val_y), axis=0)
-        for j in range(len(run_y)):
-            run_yhat = model.predict(run_X, batch_size=batch_size)
+        run_yhat = model.predict(run_X, batch_size=batch_size)
         tmp = mean_squared_error(run_yhat[-val_len:, :], val_y[:, :])
         print("epoch:%d val mse:" % i, tmp)
         val_epoch.append([i, tmp, history.history['loss']])
